@@ -12,7 +12,9 @@
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
     "db:init": "node src/db/init.js",
-    "smoke": "node scripts/smoke.mjs"
+    "smoke": "node scripts/smoke.mjs",
+    "test:db": "node scripts/migration-test.cjs",
+    "test": "npm run test:db"
   },
   "dependencies": {
     "express": "^4.19.2"

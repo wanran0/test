@@ -15,4 +15,15 @@ export const dormRepo = {
   listByOwner(userId) {
     return getDb().prepare('SELECT * FROM dorm WHERE owner_id = ?').all(userId);
   },
+  // 费用对比公开授权：由宿舍长开启/撤回
+  setConsent(dormId, on) {
+    getDb()
+      .prepare('UPDATE dorm SET report_consent = ?, consented_at = ? WHERE id = ?')
+      .run(on ? 1 : 0, on ? new Date().toISOString() : null, dormId);
+    return this.byId(dormId);
+  },
+  // 仅返回已授权的寝室（匿名对比的唯一数据源）
+  listConsented() {
+    return getDb().prepare('SELECT * FROM dorm WHERE report_consent = 1').all();
+  },
 };

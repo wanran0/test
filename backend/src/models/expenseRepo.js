@@ -78,4 +78,51 @@ export const expenseRepo = {
       .prepare('SELECT * FROM expense WHERE dorm_id = ? ORDER BY occurred_on DESC')
       .all(dormId);
   },
+
+  // 统计用聚合：单寝按类别合计（可限定 YYYY-MM）
+  sumByCategory(dormId, month = null) {
+    return getDb()
+      .prepare(
+        `SELECT COALESCE(c.name, '未分类') AS name, SUM(e.amount_cents) AS total_cents,
+                COUNT(*) AS entries
+         FROM expense e LEFT JOIN expense_category c ON c.id = e.category_id
+         WHERE e.dorm_id = ? AND (? IS NULL OR substr(e.occurred_on,1,7) = ?)
+         GROUP BY c.name ORDER BY total_cents DESC`
+      )
+      .all(dormId, month, month);
+  },
+
+  // 统计用聚合：单寝按月合计
+  sumMonthly(dormId) {
+    return getDb()
+      .prepare(
+        `SELECT substr(occurred_on, 1, 7) AS month, SUM(amount_cents) AS total_cents
+         FROM expense WHERE dorm_id = ? GROUP BY month ORDER BY month`
+      )
+      .all(dormId);
+  },
+
+  // 匿名对比用：仅已授权寝室的总额与人数（用子查询避免 join 放大）
+  sumsForConsentedDorms() {
+    return getDb()
+      .prepare(
+        `SELECT d.id AS dorm_id, d.gender,
+                (SELECT COUNT(*) FROM dorm_member m WHERE m.dorm_id = d.id) AS member_count,
+                (SELECT COALESCE(SUM(e.amount_cents), 0) FROM expense e WHERE e.dorm_id = d.id) AS total_cents,
+                (SELECT COUNT(*) FROM expense e WHERE e.dorm_id = d.id) AS expense_count
+         FROM dorm d WHERE d.report_consent = 1 ORDER BY d.id`
+      )
+      .all();
+  },
+
+  // 匿名对比用：已授权寝室的月度总额（供人均月度趋势与均值）
+  monthlyForConsentedDorms() {
+    return getDb()
+      .prepare(
+        `SELECT e.dorm_id, substr(e.occurred_on, 1, 7) AS month, SUM(e.amount_cents) AS total_cents
+         FROM expense e WHERE e.dorm_id IN (SELECT id FROM dorm WHERE report_consent = 1)
+         GROUP BY e.dorm_id, month ORDER BY month`
+      )
+      .all();
+  },
 };

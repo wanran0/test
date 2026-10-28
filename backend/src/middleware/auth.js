@@ -39,3 +39,21 @@ export function requireInput(req, res, next) {
   }
   next();
 }
+
+// 要求开发组管理员（反馈处理、测评汇总）
+export function requireAdmin(req, res, next) {
+  if (!req.user) return res.status(401).json({ error: '未认证' });
+  if (!req.user.is_admin) return res.status(403).json({ error: '需要开发组管理员权限' });
+  next();
+}
+
+// 要求指定寝室的宿舍长（公开授权等敏感开关）
+export function requireDormHead(paramName = 'dormId') {
+  return (req, res, next) => {
+    if (!req.member) return res.status(403).json({ error: '需要成员身份' });
+    if (req.member.role !== 'dorm_head') {
+      return res.status(403).json({ error: '仅宿舍长可执行该操作' });
+    }
+    next();
+  };
+}

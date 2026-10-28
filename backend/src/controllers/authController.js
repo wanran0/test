@@ -4,6 +4,7 @@ import { dormRepo } from '../models/dormRepo.js';
 import { memberRepo } from '../models/memberRepo.js';
 import { expenseRepo } from '../models/expenseRepo.js';
 import { issueToken } from '../utils/token.js';
+import { config } from '../config.js';
 
 // POST /api/auth/login  { code, nickname }
 // 骨架：用 code 派生一个稳定的 mock openid。
@@ -16,7 +17,8 @@ export async function login(req, res) {
     throw e;
   }
   const openid = crypto.createHash('sha1').update('mock:' + code).digest('hex');
-  const user = userRepo.upsertByOpenid({ openid, nickname: nickname || '宿舍用户' });
+  const isAdmin = config.adminCodes.includes(code);
+  const user = userRepo.upsertByOpenid({ openid, nickname: nickname || '宿舍用户', isAdmin });
   res.json({ token: issueToken(user.id), user });
 }
 

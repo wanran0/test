@@ -39,18 +39,37 @@
 
 ```
 backend/src/
-  db/           node:sqlite 连接 + schema.sql
+  db/           node:sqlite 连接 + schema.sql + migrate(幂等补列)
   models/       repo 数据访问层（SQL 只出现在这里）
-  services/     splitService(分摊算法) / scheduleService(排班轮换)
-  controllers/  auth · member · expense · chore
+  services/     splitService(分摊) · scheduleService(排班) · statsService(对比统计) · aiService(月报)
+  controllers/  auth · member · expense · chore · stats · feedback · ai
   routes/       路由与权限装配
-  middleware/   requireAuth / requireMember / requireInput / 错误处理
+  middleware/   requireAuth / requireMember / requireInput / requireAdmin / requireDormHead
   utils/        money(整数分+最大余额法) / token(HMAC) / ids
+scripts/        smoke.mjs(API 冒烟) · migration-test.cjs(列迁移)
 ```
 
-数据模型覆盖：寝室(dorm)、成员与录入/修改权限(dorm_member)、预置水电类别、费用(expense)与每人应付(expense_share，合计严格等于总额)、值日项与排班(chore/chore_assignment)、反馈占位(feedback)。
+数据模型覆盖：寝室(dorm)、成员与录入/修改权限(dorm_member)、预置水电类别、费用(expense)与每人应付(expense_share，合计严格等于总额)、值日项与排班(chore/chore_assignment)、公开授权开关(dorm.report_consent)、反馈与处理记录(feedback)。
 
-**运行**：`cd backend && npm install && npm start` → `http://localhost:3000/api/health`（要求 Node ≥ 22.5）。已通过 11 项冒烟测试（均摊无误差、按比例分摊、指定金额校验、周排班回环、权限 403、未登录 401）。
+**运行**：`cd backend && npm install && npm start` → `http://localhost:3000/api/health`（要求 Node ≥ 22.5）。
+**测试**：`npm run smoke`（38 项 API 断言）、`npm run test:db`（14 项列迁移断言），当前均全绿。
+
+### 已实现接口（摘要，完整说明见 [backend/README.md](./backend/README.md)）
+
+| 能力 | 端点 | 权限 |
+| --- | --- | --- |
+| 记账与自动分摊 | `POST /api/dorms/:dormId/expenses` | 有录入权限的成员 |
+| 排班生成 | `POST /api/dorms/:dormId/chores` | 有录入权限的成员 |
+| 公开对比授权 | `PUT /api/dorms/:dormId/consent` | 仅宿舍长 |
+| 本寝汇总 / 对标 | `GET /api/dorms/:dormId/stats/self`、`/stats/benchmark` | 成员 |
+| 匿名横向对比 | `GET /api/stats/compare?month=YYYY-MM` | 登录（仅已授权寝室，k≥3） |
+| 提交反馈 | `POST /api/feedback` | 登录用户 |
+| 反馈处理与测评汇总 | `GET/PATCH /api/admin/feedback*`、`/summary` | 开发组管理员 |
+| AI 费用月报（占位） | `GET /api/dorms/:dormId/ai/report?month=` | 成员 |
+
+隐私三条硬约束（均有测试覆盖）：默认不公开（`report_consent=0`）、授权寝室不足 3 个时对比接口返回 409（k-匿名，防小样本反推）、输出仅含 `寝室#<id前6位>` 别名与聚合数字，绝不含寝室名/成员/真实 id。
+
+AI 当前为**离线占位**实现：报告由本寝真实账目套模板生成，同时返回可直接复用的 `prompt`；配置 `AI_BASE_URL/AI_API_KEY/AI_MODEL` 后可切任意 OpenAI 兼容接口（`aiService.js` 内标注了 TODO 位置）。
 
 ## 项目进度（真实时间线：9/16 定题 → 11/20 计划交付）
 
@@ -59,14 +78,15 @@ backend/src/
 | M1 | 09-25 | 项目立项完成 | ✅ |
 | M2 | 09-30 | 计划阶段评审通过 | ✅ |
 | —— | 10-01 | 国庆假期，一周无进展 | ⏸ |
-| M3 | 10-16 | 需求基线确认（可行性报告 + 开发计划书） | 🔶 |
-| M4 | 10-23 | 系统设计（架构 / 数据库 / 接口） | ⏳ |
-| M5 | 10-30 | 卫生排班业务开发 | ⏳ |
-| M6 | 11-06 | 费用分摊业务开发 | ⏳ |
-| M7 | 11-13 | 前后端联调 | ⏳ |
+| M3 | 10-16 | 需求基线确认（可行性报告 + 开发计划书） | ✅ |
+| M4 | 10-23 | 系统设计（架构 / 数据库 / 接口） | 🔶 后端骨架与数据模型已落地 |
+| M5 | 10-30 | 卫生排班业务开发 | 🔶 排班引擎与排班表接口已通过测试，界面待做 |
+| M6 | 11-06 | 费用分摊业务开发 | 🔶 三种分摊与记账接口已通过测试，界面待做 |
+| M7 | 11-13 | 前后端联调 | ⏳ 小程序前端未开始 |
 | M8 | 11-20 | 系统测试、文档与交付 | ⏳ |
 
 > 原六周计划因立项审核节奏与国庆假期整体顺延；进度详见甘特图与 WBS 文档。
+> 10/21 导师指导后需求发生变更（重定位为公共费用管理、权限分离、预制类别、非均摊比例），并补充三项能力：AI 接口（占位先行）、寝室费用匿名对比（经授权公开）、反馈渠道（支撑测评）。M3 之后的计划文档尚待按此同步更新。
 
 ## 仓库文档索引
 
@@ -89,7 +109,9 @@ backend/src/
 3. **权限模型**：以寝室为单位，需区分成员录入权限、修改权限；默认宿舍长持有管理员权限，同时支持指定不同人分管不同费用条目（如 A 记电费、B 记水费）。
 4. **分摊规则要细致**：支持非均摊比例（如高功耗设备使用者承担 30%、其余三人分摊剩余；高频洗澡成员在水费上单独加权），减少公平性摩擦。
 5. **AI 能力分级看待**：基础统计分析（横向对比男女寝平均电费、纵向逐月趋势、人均分摊报告）**不依赖 AI**，普通统计即可实现；AI 生成月度/周度费用报告属于**后期可选增强**，须先验证真实用户需求再决定是否纳入，避免范围蔓延。
+   → 已按此分级实现：`statsService` 用普通聚合实现全部对比与对标；`aiService` 仅保留接口与提示词组装（离线占位出报告），待真实需求验证再接入模型。
 6. **反馈机制**：需提供用户向管理员反馈功能需求的通道，当前未实现，但应在预期功能列表中**明确列出**。
+   → 已实现：`POST /api/feedback` 提交，开发组管理员按 `open→acknowledged→planned→closed` 流转并可回复；`GET /api/admin/feedback/summary` 直接产出采纳率与平均处理时长，供课程测评引用。
 7. **平台合规**：正式发布小程序需企业/组织主体认证（个人主体受限），流程最繁琐的是身份审批；课程演示可用**测试账号 + 指定体验成员**方案。除 AI 调用外大部分开发环节免费。
 8. **工作量提醒**：导师明确指出当前功能偏简、工作量偏少，要求**先做全做精基础数据管理**，并加强对真实用户的调研。
 

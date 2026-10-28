@@ -8,16 +8,19 @@ CREATE TABLE IF NOT EXISTS app_user (
   id          TEXT PRIMARY KEY,
   openid      TEXT UNIQUE,
   nickname    TEXT NOT NULL,
+  is_admin    INTEGER NOT NULL DEFAULT 0,          -- 开发组成员：可查看/处理全部反馈
   created_at  TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
 -- 寝室（以寝室为单位使用）
 CREATE TABLE IF NOT EXISTS dorm (
-  id          TEXT PRIMARY KEY,
-  name        TEXT NOT NULL,
-  gender      TEXT NOT NULL DEFAULT 'unknown',   -- male | female | mixed | unknown
-  owner_id    TEXT NOT NULL REFERENCES app_user(id),
-  created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+  id             TEXT PRIMARY KEY,
+  name           TEXT NOT NULL,
+  gender         TEXT NOT NULL DEFAULT 'unknown',  -- male | female | mixed | unknown
+  owner_id       TEXT NOT NULL REFERENCES app_user(id),
+  report_consent INTEGER NOT NULL DEFAULT 0,       -- 是否同意公开匿名费用对比（宿舍长开启）
+  consented_at   TEXT,
+  created_at     TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
 -- 寝室成员 + 权限（导师意见：录入/修改权限可分别指定，默认宿舍长持有管理员权限）
@@ -88,12 +91,17 @@ CREATE TABLE IF NOT EXISTS chore_assignment (
   UNIQUE (chore_id, due_date)
 );
 
--- 反馈通道（导师意见：需保留用户->管理员反馈入口，先占位）
+-- 反馈通道（导师意见：需保留用户->管理员反馈入口；亦是「更新测评」的数据来源）
 CREATE TABLE IF NOT EXISTS feedback (
   id          TEXT PRIMARY KEY,
   dorm_id     TEXT REFERENCES dorm(id) ON DELETE CASCADE,
   user_id     TEXT REFERENCES app_user(id),
+  category    TEXT NOT NULL DEFAULT 'feature',     -- feature 需求 | bug 缺陷 | experience 体验 | other
   content     TEXT NOT NULL,
-  status      TEXT NOT NULL DEFAULT 'open',       -- open | acknowledged | closed
-  created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+  rating      INTEGER,                             -- 可选 1-5 自评价值，便于测评排序
+  status      TEXT NOT NULL DEFAULT 'open',        -- open | acknowledged | planned | closed
+  reply       TEXT,                                -- 开发组回复
+  handled_by  TEXT REFERENCES app_user(id),        -- 处理人（管理员）
+  created_at  TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at  TEXT NOT NULL DEFAULT (datetime('now'))
 );
