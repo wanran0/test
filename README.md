@@ -27,11 +27,30 @@
 
 | 层 | 方案 | 说明 |
 | --- | --- | --- |
-| 前端 | 微信小程序 | 免安装、便于寝室间传播 |
-| 后端 | Node.js (Express) / Python (Flask) / Java (Spring Boot) 三选一 | 课程作业，以轻量易部署为先 |
-| 数据库 | SQLite / 免费云额度 | 数据量小，本地或免费托管即可 |
+| 前端 | 微信小程序 | 免安装、便于寝室间传播（待开发） |
+| 后端 | **Node.js + Express**（已定稿） | 课程作业以轻量易部署为先；骨架已落地 `backend/` |
+| 数据库 | **SQLite**（Node 内置 `node:sqlite`） | 零原生依赖，金额以「分」整数存储 |
 | 提醒机制 | 定时任务（cron）或小程序订阅消息 | 推送受限时降级为站内提醒 |
-| 核心算法 | 循环队列/取模排班；整数分记账避免浮点误差 | 结算以"减少转账次数"为目标 |
+| 核心算法 | 循环队列/取模排班；最大余额法整数分分摊 | 结算以"减少转账次数"为目标 |
+
+## 代码结构
+
+后端骨架位于 [`backend/`](./backend/)，标准 Express 分层，详见 [backend/README.md](./backend/README.md)：
+
+```
+backend/src/
+  db/           node:sqlite 连接 + schema.sql
+  models/       repo 数据访问层（SQL 只出现在这里）
+  services/     splitService(分摊算法) / scheduleService(排班轮换)
+  controllers/  auth · member · expense · chore
+  routes/       路由与权限装配
+  middleware/   requireAuth / requireMember / requireInput / 错误处理
+  utils/        money(整数分+最大余额法) / token(HMAC) / ids
+```
+
+数据模型覆盖：寝室(dorm)、成员与录入/修改权限(dorm_member)、预置水电类别、费用(expense)与每人应付(expense_share，合计严格等于总额)、值日项与排班(chore/chore_assignment)、反馈占位(feedback)。
+
+**运行**：`cd backend && npm install && npm start` → `http://localhost:3000/api/health`（要求 Node ≥ 22.5）。已通过 11 项冒烟测试（均摊无误差、按比例分摊、指定金额校验、周排班回环、权限 403、未登录 401）。
 
 ## 项目进度（真实时间线：9/16 定题 → 11/20 计划交付）
 
