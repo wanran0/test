@@ -1,0 +1,11 @@
+<view class="nav {{tone}}" style="padding-top:{{sb}}px">
+  <view class="nav-in" style="height:{{nh}}px">
+    <view wx:if="{{back}}" class="back" bindtap="onBack" hover-class="hov"></view>
+    <view class="tt">
+      <view class="t ellipsis">{{title}}</view>
+      <view wx:if="{{sub}}" class="s ellipsis">{{sub}}</view>
+    </view>
+    <view class="rt"><slot name="right"></slot></view>
+  </view>
+</view>
+<view style="height:{{sb + nh}}px"></view>

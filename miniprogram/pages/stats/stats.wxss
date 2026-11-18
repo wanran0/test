@@ -1,0 +1,16 @@
+.mpick { font-size: 22rpx; font-weight: 700; padding: 8rpx 20rpx; border-radius: 999rpx; background: rgba(253,251,244,.16); border: 1rpx solid rgba(253,251,244,.35); }
+.hero { border-radius: 32rpx; padding: 34rpx; margin-bottom: 24rpx; color: #FDFBF4; background: linear-gradient(135deg, #0F3D33, #17604C 70%, #257A57); box-shadow: 0 16rpx 36rpx rgba(15,61,51,.28); }
+.h-lab { font-size: 24rpx; opacity: .8; }
+.h-num { font-size: 72rpx; font-weight: 800; }
+.h-row { display: flex; border-top: 1rpx solid rgba(253,251,244,.2); margin-top: 20rpx; padding-top: 18rpx; }
+.h-cell { flex: 1; text-align: center; }
+.h-cell .v { font-size: 32rpx; font-weight: 800; }
+.h-cell .k { font-size: 20rpx; opacity: .7; }
+.crow { padding: 14rpx 0; }
+.trend { display: flex; align-items: flex-end; height: 220rpx; padding-top: 10rpx; }
+.tcol { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; }
+.tbar { width: 60%; min-width: 12rpx; border-radius: 8rpx 8rpx 4rpx 4rpx; background: linear-gradient(180deg, var(--amber), var(--verm)); transition: height .5s ease; }
+.td { font-size: 18rpx; color: var(--mut); margin-top: 8rpx; }
+.cmperr { background: var(--amber-soft); color: #A96F14; font-size: 24rpx; border-radius: 16rpx; padding: 18rpx 22rpx; }
+.rank { width: 44rpx; height: 44rpx; border-radius: 50%; background: #F1EBDC; color: var(--mut); font-weight: 800; display: flex; align-items: center; justify-content: center; margin-right: 18rpx; }
+.lrow.mine { background: var(--amber-soft); border-radius: 18rpx; padding: 18rpx 14rpx; border-bottom: none; }

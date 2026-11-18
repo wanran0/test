@@ -1,0 +1,10 @@
+.hero {
+  border-radius: 32rpx; padding: 36rpx 34rpx; margin-bottom: 24rpx; color: #FDFBF4;
+  background: linear-gradient(135deg, #0F3D33, #17604C 70%, #257A57);
+  box-shadow: 0 16rpx 36rpx rgba(15, 61, 51, .28);
+}
+.h-num { font-size: 80rpx; font-weight: 800; margin-top: 16rpx; }
+.h-title { font-size: 34rpx; font-weight: 700; }
+.h-sub { font-size: 24rpx; opacity: .8; margin-top: 6rpx; }
+.prow { display: flex; align-items: center; padding: 16rpx 0; }
+.prow .pct { width: 90rpx; text-align: right; color: var(--mut); font-size: 24rpx; margin-left: 14rpx; }

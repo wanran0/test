@@ -1,0 +1,38 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/index/index",
+    "pages/bills/bills",
+    "pages/duty/duty",
+    "pages/mine/mine",
+    "pages/bill-add/bill-add",
+    "pages/bill-detail/bill-detail",
+    "pages/settle/settle",
+    "pages/stats/stats",
+    "pages/report/report",
+    "pages/feedback/feedback",
+    "pages/dorm/dorm",
+    "pages/admin/admin"
+  ],
+  "window": {
+    "navigationStyle": "custom",
+    "backgroundColor": "#F6F1E6",
+    "backgroundTextStyle": "dark",
+    "navigationBarTextStyle": "white"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#7C8781",
+    "selectedColor": "#0F3D33",
+    "backgroundColor": "#FFFCF5",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "首页" },
+      { "pagePath": "pages/bills/bills", "text": "账单" },
+      { "pagePath": "pages/duty/duty", "text": "值日" },
+      { "pagePath": "pages/mine/mine", "text": "我的" }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

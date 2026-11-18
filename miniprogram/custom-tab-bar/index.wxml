@@ -1,0 +1,8 @@
+<view class="tb">
+  <view wx:for="{{list}}" wx:key="text" class="item {{selected === index ? 'on' : ''}}" data-i="{{index}}" bindtap="onTap" hover-class="hov">
+    <view class="pill">
+      <view class="ico {{item.icon}} {{selected === index ? 'act' : ''}}"></view>
+    </view>
+    <view class="txt">{{item.text}}</view>
+  </view>
+</view>

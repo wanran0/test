@@ -1,0 +1,13 @@
+.amt-box { display: flex; align-items: baseline; background: #FBF8EF; border: 2rpx solid var(--line); border-radius: 24rpx; padding: 18rpx 26rpx; }
+.amt-box .cur { font-size: 40rpx; font-weight: 800; color: var(--verm); margin-right: 12rpx; }
+.amt { flex: 1; font-size: 64rpx; font-weight: 800; }
+.modes { display: flex; background: #F1EBDC; border-radius: 999rpx; padding: 6rpx; }
+.m { flex: 1; text-align: center; padding: 14rpx 0; border-radius: 999rpx; font-size: 26rpx; color: var(--mut); font-weight: 700; transition: all .18s ease; }
+.m.on { background: var(--card); color: var(--pine); box-shadow: 0 4rpx 12rpx rgba(15,61,51,.12); }
+.rrow { display: flex; align-items: center; padding: 14rpx 0; border-bottom: 1rpx dashed var(--line); }
+.rrow:last-child { border-bottom: none; }
+.rin { width: 160rpx; background: #FBF8EF; border: 2rpx solid var(--line); border-radius: 16rpx; padding: 10rpx 18rpx; text-align: right; font-size: 28rpx; }
+.prow { display: flex; align-items: center; padding: 14rpx 0; }
+.prow .pct { width: 90rpx; text-align: right; color: var(--mut); font-size: 24rpx; margin-left: 14rpx; }
+.sumrow { border-top: 1rpx dashed var(--line); margin-top: 12rpx; padding-top: 16rpx; }
+.preview { border: 2rpx solid var(--pine2); }

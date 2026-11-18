@@ -1,0 +1,29 @@
+<nav-bar title="AI 月报" sub="{{monthCN}}">
+  <picker slot="right" mode="date" fields="month" value="{{month}}-01" bindchange="onMonth">
+    <view class="mpick">换月 ▾</view>
+  </picker>
+</nav-bar>
+<view class="page">
+  <view class="wrap">
+    <view class="card paper">
+      <view class="row" style="margin-bottom:20rpx">
+        <view class="spark"></view>
+        <view class="grow">
+          <view class="h2">月度经营小结</view>
+          <view class="sub">离线模板生成 · AI 接口占位（未调用外部服务）</view>
+        </view>
+        <view class="badge info">F11</view>
+      </view>
+      <view wx:if="{{busy}}" class="gen">
+        <view class="spin"></view>
+        <text class="sub">正在汇总账单与值日数据…</text>
+      </view>
+      <view wx:else class="body">{{text}}</view>
+    </view>
+    <view class="row">
+      <button class="btn grow" style="margin-right:18rpx" bindtap="gen">重新生成</button>
+      <button class="btn line grow" bindtap="copy">复制全文</button>
+    </view>
+    <view class="sub" style="text-align:center;margin:22rpx 0 40rpx">接入真实大模型后，此处将替换为 provider 生成的自然语言月报</view>
+  </view>
+</view>

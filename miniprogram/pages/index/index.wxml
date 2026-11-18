@@ -1,0 +1,87 @@
+<nav-bar title="寝室账本" sub="{{dorm ? dorm.name : (isAdmin ? '平台管理视角' : '未加入寝室')}}" back="{{false}}">
+  <view slot="right" class="rolechip">{{roleCN}}</view>
+</nav-bar>
+<view class="page tabbed">
+  <view class="wrap">
+
+    <!-- 管理员视角 -->
+    <block wx:if="{{isAdmin}}">
+      <view class="hero">
+        <view class="h-lab">平台运行总览</view>
+        <view class="h-num num">{{admin.totalStr}}<text class="unit">元 · 累计流水</text></view>
+        <view class="h-row">
+          <view class="h-cell"><view class="v num">{{admin.dorms}}</view><view class="k">在用寝室</view></view>
+          <view class="h-cell"><view class="v num">{{admin.users}}</view><view class="k">注册用户</view></view>
+          <view class="h-cell"><view class="v num">{{admin.bills}}</view><view class="k">账单笔数</view></view>
+          <view class="h-cell"><view class="v num">{{admin.pendingFb}}</view><view class="k">待处理反馈</view></view>
+        </view>
+      </view>
+      <view class="card press" bindtap="goAdmin">
+        <view class="between">
+          <view><view class="h2">进入管理后台</view><view class="sub">用户 / 寝室数据 · 纠纷调解 · 内容管理</view></view>
+          <view class="go">›</view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 未加入寝室 -->
+    <block wx:elif="{{!dorm}}">
+      <view class="card" style="text-align:center;padding:60rpx 30rpx">
+        <view class="empty" style="padding:0 0 30rpx"><view class="ico"></view><view class="txt">你还没有加入寝室</view></view>
+        <view class="sub" style="margin-bottom:30rpx">输入邀请码加入，或创建一间新寝室</view>
+        <button class="btn block" bindtap="goDorm">加入 / 创建寝室</button>
+      </view>
+    </block>
+
+    <!-- 成员 / 寝室长视角 -->
+    <block wx:else>
+      <view class="hero">
+        <view class="h-lab">{{monthCN}} · 公共支出</view>
+        <view class="h-num num">{{total}}<text class="unit">元</text></view>
+        <view class="h-sub">我的分摊 <text class="num bold">{{myShare}}</text> 元 · 人均 <text class="num">{{avg}}</text> 元</view>
+        <view class="h-row">
+          <view class="h-cell"><view class="v num">{{count}}</view><view class="k">本月笔数</view></view>
+          <view class="h-cell"><view class="v num">{{memberN}}</view><view class="k">寝室成员</view></view>
+          <view class="h-cell"><view class="v num {{balance < 0 ? 'neg' : ''}}">{{balanceDir === '已结清' ? '0.00' : balanceStr}}</view><view class="k">{{balanceDir}}</view></view>
+        </view>
+        <view class="h-act" bindtap="goSettle">查看结算与转账建议 ›</view>
+      </view>
+
+      <view class="card duty-card">
+        <view class="between">
+          <view class="row">
+            <view class="d-ico {{dutyState}}"></view>
+            <view>
+              <view class="bold">今日值日 · {{dutyName || '—'}}</view>
+              <view class="sub">{{dutyState === 'done' ? '已完成打卡，辛苦啦' : dutyState === 'miss' ? '昨日缺卡，记得补卡' : dutyMine ? '轮到你啦，22:00 前打卡' : '提醒 TA 记得打卡'}}</view>
+            </view>
+          </view>
+          <button wx:if="{{dutyMine && dutyState !== 'done'}}" class="btn small verm" bindtap="onCheckin">打卡</button>
+          <view wx:else class="more" bindtap="goDuty">排班 ›</view>
+        </view>
+      </view>
+
+      <view class="quick">
+        <view class="q" bindtap="goAdd" hover-class="qh"><view class="qi q1"></view><view class="qt">记一笔</view></view>
+        <view class="q" bindtap="goSettle" hover-class="qh"><view class="qi q2"></view><view class="qt">去结算</view></view>
+        <view class="q" bindtap="goStats" hover-class="qh"><view class="qi q3"></view><view class="qt">统计</view></view>
+        <view class="q" bindtap="goReport" hover-class="qh"><view class="qi q4"></view><view class="qt">AI月报</view></view>
+      </view>
+
+      <view class="card">
+        <view class="card-title"><view class="t">最近账单</view><view class="more" bindtap="goBills">全部 ›</view></view>
+        <view wx:if="{{!recent.length}}" class="empty"><view class="ico"></view><view class="txt">还没有账单，点右下角记一笔</view></view>
+        <view wx:for="{{recent}}" wx:key="id" class="lrow press" data-id="{{item.id}}" bindtap="openBill">
+          <view class="avatar" style="background:{{item.hue}};width:68rpx;height:68rpx;border-radius:20rpx;font-size:24rpx">{{item.cat[0]}}</view>
+          <view class="grow">
+            <view class="row"><text class="bold ellipsis">{{item.title}}</text><text wx:if="{{item.settled}}" class="badge ok" style="margin-left:12rpx">已结</text></view>
+            <view class="sub">{{item.date}} · {{item.payer}} 垫付 · 我摊 {{item.mine}}</view>
+          </view>
+          <view class="num bold" style="font-size:32rpx">¥{{item.amount}}</view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <view wx:if="{{dorm && !isAdmin}}" class="fab" bindtap="goAdd"><view class="plus"></view><view class="cap">记一笔</view></view>
+</view>

@@ -1,0 +1,4 @@
+.modes { display: flex; background: #F1EBDC; border-radius: 999rpx; padding: 6rpx; }
+.m { flex: 1; text-align: center; padding: 14rpx 0; border-radius: 999rpx; font-size: 26rpx; color: var(--mut); font-weight: 700; transition: all .18s ease; }
+.m.on { background: var(--card); color: var(--pine); box-shadow: 0 4rpx 12rpx rgba(15,61,51,.12); }
+.reply { margin-top: 16rpx; background: var(--jade-soft); color: var(--jade); font-size: 24rpx; border-radius: 16rpx; padding: 14rpx 20rpx; }

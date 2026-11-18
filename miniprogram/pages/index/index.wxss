@@ -1,0 +1,37 @@
+.rolechip { font-size: 20rpx; font-weight: 700; padding: 6rpx 18rpx; border-radius: 999rpx; background: rgba(253,251,244,.16); border: 1rpx solid rgba(253,251,244,.35); }
+.hero {
+  border-radius: 32rpx; padding: 36rpx 34rpx 28rpx; margin-bottom: 24rpx; color: #FDFBF4;
+  background: linear-gradient(135deg, #0F3D33 0%, #17604C 62%, #257A57 100%);
+  box-shadow: 0 16rpx 36rpx rgba(15, 61, 51, .28); position: relative; overflow: hidden;
+}
+.hero::after {
+  content: ""; position: absolute; right: -70rpx; top: -70rpx; width: 260rpx; height: 260rpx; border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, rgba(232,163,61,.4), rgba(232,163,61,0) 70%);
+}
+.h-lab { font-size: 24rpx; opacity: .8; }
+.h-num { font-size: 84rpx; font-weight: 800; line-height: 1.15; }
+.h-num .unit { font-size: 24rpx; font-weight: 400; opacity: .75; margin-left: 12rpx; }
+.h-sub { font-size: 24rpx; opacity: .9; margin-top: 4rpx; }
+.h-row { display: flex; margin-top: 28rpx; border-top: 1rpx solid rgba(253,251,244,.2); padding-top: 22rpx; }
+.h-cell { flex: 1; text-align: center; }
+.h-cell .v { font-size: 36rpx; font-weight: 800; }
+.h-cell .v.neg { color: #F0A48E; }
+.h-cell .k { font-size: 20rpx; opacity: .7; }
+.h-act { margin-top: 22rpx; font-size: 24rpx; font-weight: 700; color: #F4C877; }
+.duty-card .d-ico { width: 76rpx; height: 76rpx; border-radius: 24rpx; margin-right: 20rpx; background-position: center; background-size: 44rpx; background-repeat: no-repeat; }
+.d-ico.todo { background-color: var(--amber-soft); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%23E8A33D' stroke-width='2'/%3E%3Cpath d='M12 7v5l3 3' fill='none' stroke='%23E8A33D' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E"); }
+.d-ico.done { background-color: var(--jade-soft); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='%232E9E6B'/%3E%3Cpath d='M8 12l3 3 5-6' fill='none' stroke='%23FFF' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+.d-ico.miss { background-color: var(--verm-soft); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%23D9482B' stroke-width='2'/%3E%3Cpath d='M12 7v6M12 16.5v.5' stroke='%23D9482B' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E"); }
+.duty-card .more { color: var(--pine2); font-weight: 700; font-size: 26rpx; }
+.quick { display: flex; margin: 6rpx 0 26rpx; }
+.q { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 22rpx 0; background: var(--card); border: 1rpx solid var(--line); border-radius: 24rpx; margin-right: 16rpx; transition: transform .12s ease; }
+.q:last-child { margin-right: 0; }
+.q.qh { transform: scale(.95); }
+.qi { width: 72rpx; height: 72rpx; border-radius: 22rpx; margin-bottom: 12rpx; background-position: center; background-size: 40rpx; background-repeat: no-repeat; }
+.q1 { background-color: var(--verm-soft); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 5v14M5 12h14' stroke='%23D9482B' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E"); }
+.q2 { background-color: var(--jade-soft); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M4 8h13l-3-3M20 16H7l3 3' fill='none' stroke='%232E9E6B' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); }
+.q3 { background-color: var(--azure-soft); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 20V10M12 20V4M19 20v-7' stroke='%232E77AE' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E"); }
+.q4 { background-color: var(--plum-soft); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4z' fill='%237A4E8C'/%3E%3Cpath d='M18 14l.9 2.3L21 17l-2.1.7L18 20l-.9-2.3L15 17l2.1-.7z' fill='%237A4E8C'/%3E%3C/svg%3E"); }
+.qt { font-size: 24rpx; font-weight: 700; }
+.lrow.press:active { opacity: .75; }
+.go { font-size: 44rpx; color: var(--pine2); }

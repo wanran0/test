@@ -1,0 +1,76 @@
+<nav-bar title="值日排班" sub="{{dorm ? dorm.name : ''}}" back="{{false}}"></nav-bar>
+<view class="page tabbed">
+  <view class="wrap">
+    <view wx:if="{{!dorm}}" class="empty"><view class="ico"></view><view class="txt">加入寝室后查看值日排班</view></view>
+    <block wx:else>
+      <view class="card">
+        <view class="card-title"><view class="t">本周轮值</view><view class="more">取模自动排班</view></view>
+        <view class="week">
+          <view wx:for="{{week}}" wx:key="id" class="day {{item.state}} {{item.sel ? 'sel' : ''}}" data-date="{{item.date}}" bindtap="pickDay">
+            <view class="dw">{{item.dow}}</view>
+            <view class="dav" style="background:{{item.hue}}">{{item.initial}}</view>
+            <view class="dd num">{{item.md}}</view>
+            <view class="st">{{item.state === 'done' ? '✓' : item.state === 'miss' ? '!' : item.state === 'today' ? '今' : ''}}</view>
+          </view>
+        </view>
+      </view>
+
+      <view class="card selcard">
+        <view class="between">
+          <view class="row">
+            <view class="avatar" style="background:{{selHue}}">{{selName[0]}}</view>
+            <view>
+              <view class="h2">{{selDateCN}}</view>
+              <view class="sub">值日生 · {{selName}}</view>
+            </view>
+          </view>
+          <text class="badge {{selState === 'done' ? 'ok' : selState === 'miss' ? 'warn' : selState === 'todo' ? 'head' : 'mute'}}">{{selState === 'done' ? '已打卡' : selState === 'miss' ? '缺卡' : selState === 'todo' ? '待打卡' : '未到期'}}</text>
+        </view>
+        <view wx:if="{{selSwap}}" class="swapnote {{selSwap.status}}">
+          换班申请 → {{swapTargetName}} · {{selSwap.status === 'pending' ? '等待对方确认' : selSwap.status === 'accepted' ? '已同意' : '已拒绝'}}
+        </view>
+        <view class="acts">
+          <button wx:if="{{selMine && selState !== 'done' && selState !== 'future'}}" class="btn small verm" bindtap="onCheckin">{{selState === 'miss' ? '补卡' : '打卡'}}</button>
+          <button wx:if="{{selMine && selState !== 'done' && !selSwap}}" class="btn small line" bindtap="openSwap">发起换班</button>
+          <button wx:if="{{canRespond}}" class="btn small" data-ok="1" bindtap="onRespond">同意换班</button>
+          <button wx:if="{{canRespond}}" class="btn small line" data-ok="0" bindtap="onRespond">拒绝</button>
+        </view>
+      </view>
+
+      <view class="card">
+        <view class="card-title"><view class="t">轮值顺序</view><view class="more" wx:if="{{isHead}}">寝室长可调序</view></view>
+        <view wx:for="{{order}}" wx:key="id" class="lrow">
+          <view class="idx num">{{item.i + 1}}</view>
+          <view class="avatar" style="background:{{item.hue}};width:64rpx;height:64rpx;border-radius:20rpx;font-size:24rpx">{{item.name[0]}}</view>
+          <view class="grow bold">{{item.name}}</view>
+          <view wx:if="{{isHead}}" class="mv">
+            <view class="mb {{item.first ? 'dis' : ''}}" data-id="{{item.id}}" data-dir="up" bindtap="move">↑</view>
+            <view class="mb {{item.last ? 'dis' : ''}}" data-id="{{item.id}}" data-dir="down" bindtap="move">↓</view>
+          </view>
+        </view>
+      </view>
+
+      <view class="card">
+        <view class="card-title"><view class="t">最近打卡记录</view></view>
+        <view wx:for="{{history}}" wx:key="id" class="lrow">
+          <view class="avatar" style="background:{{item.hue}};width:60rpx;height:60rpx;border-radius:18rpx;font-size:22rpx">{{item.name[0]}}</view>
+          <view class="grow"><text class="bold">{{item.name}}</text><text class="sub" style="margin-left:14rpx">{{item.date}}</text></view>
+          <text wx:if="{{item.done}}" class="badge ok">✓ {{item.time}}</text>
+          <text wx:else class="badge warn">缺卡</text>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <view wx:if="{{sheet}}" class="mask" bindtap="closeSheet"></view>
+  <view wx:if="{{sheet}}" class="sheet">
+    <view class="grab"></view>
+    <view class="h2">选择换班对象</view>
+    <view class="sub" style="margin:8rpx 0 20rpx">对方确认后，当日值日自动转移</view>
+    <view wx:for="{{candidates}}" wx:key="id" class="idrow" data-id="{{item.id}}" bindtap="pickTarget" hover-class="hov">
+      <view class="avatar" style="background:{{item.hue}}">{{item.name[0]}}</view>
+      <view class="grow bold">{{item.name}}</view>
+      <view class="go">申请 ›</view>
+    </view>
+  </view>
+</view>

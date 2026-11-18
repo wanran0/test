@@ -1,0 +1,69 @@
+<nav-bar title="我的寝室" sub="{{dorm ? dorm.name : '加入或创建'}}"></nav-bar>
+<view class="page">
+  <view class="wrap">
+    <block wx:if="{{!dorm}}">
+      <view class="card">
+        <view class="card-title"><view class="t">加入寝室</view><view class="more">需邀请码认证</view></view>
+        <view class="row">
+          <input class="input grow num" type="number" placeholder="输入 6 位邀请码，如 502502" value="{{code}}" bindinput="onCode" maxlength="6" />
+          <button class="btn small" style="margin-left:16rpx" bindtap="join">加入</button>
+        </view>
+        <view class="sub" style="margin-top:14rpx">演示提示：种子寝室邀请码 502502 / 311311 / 208208</view>
+      </view>
+      <view class="card">
+        <view class="card-title"><view class="t">创建寝室</view><view class="more">创建者即寝室长</view></view>
+        <view class="row">
+          <input class="input grow" placeholder="例如：梧桐苑 5栋601" value="{{newName}}" bindinput="onNewName" maxlength="20" />
+          <button class="btn small verm" style="margin-left:16rpx" bindtap="create">创建</button>
+        </view>
+      </view>
+    </block>
+
+    <block wx:else>
+      <view class="hero">
+        <view class="h-lab">寝室</view>
+        <view class="h-title">{{dorm.name}}</view>
+        <view class="between" style="margin-top:20rpx">
+          <view>
+            <view class="sub" style="opacity:.8">邀请码</view>
+            <view class="code num">{{dorm.code}}</view>
+          </view>
+          <button class="btn small line" style="background:rgba(253,251,244,.14);color:#FDFBF4;border-color:rgba(253,251,244,.4)" bindtap="copyCode">复制邀请码</button>
+        </view>
+        <view class="sub" style="opacity:.8;margin-top:16rpx">寝室长 {{headName}} · {{members.length}} 名成员</view>
+      </view>
+
+      <view class="card">
+        <view class="card-title"><view class="t">成员</view><view class="more" wx:if="{{isHead}}">寝室长可移出</view></view>
+        <view wx:for="{{members}}" wx:key="id" class="lrow">
+          <view class="avatar" style="background:{{item.hue}}">{{item.name[0]}}</view>
+          <view class="grow">
+            <view class="row"><text class="bold">{{item.name}}</text><text wx:if="{{item.isMe}}" class="badge info" style="margin-left:12rpx">我</text></view>
+            <view class="sub">{{item.roleCN}}</view>
+          </view>
+          <text class="badge {{item.isHead ? 'head' : 'member'}}">{{item.isHead ? '寝室长' : '成员'}}</text>
+          <view wx:if="{{isHead && !item.isHead && !item.isMe}}" class="rm" data-id="{{item.id}}" bindtap="remove">移出</view>
+        </view>
+      </view>
+
+      <view class="card">
+        <view class="card-title"><view class="t">寝室公约</view><view class="more" wx:if="{{isHead}}" bindtap="openRules">编辑 ›</view></view>
+        <view wx:for="{{dorm.rules}}" wx:key="*this" class="rule"><view class="rn num">{{index + 1}}</view><view class="grow">{{item}}</view></view>
+        <view wx:if="{{!dorm.rules.length}}" class="sub">暂无公约</view>
+      </view>
+
+      <button wx:if="{{!isHead}}" class="btn line block" style="color:var(--verm);border-color:var(--verm)" bindtap="leave">退出寝室</button>
+      <view wx:else class="sub" style="text-align:center;margin:16rpx 0 40rpx">寝室长需先转让管理权才能退出（演示版暂不开放转让）</view>
+    </block>
+  </view>
+
+  <view wx:if="{{sheet === 'rules'}}" class="mask" bindtap="closeSheet"></view>
+  <view wx:if="{{sheet === 'rules'}}" class="sheet">
+    <view class="grab"></view>
+    <view class="h2">编辑寝室公约</view>
+    <view class="sub" style="margin:8rpx 0 18rpx">每行一条，保存后全员可见</view>
+    <textarea class="textarea" style="min-height:280rpx" value="{{rulesText}}" bindinput="onRules" maxlength="400" />
+    <button class="btn block" style="margin-top:22rpx" bindtap="saveRules">保存公约</button>
+  </view>
+  <snack id="snack"></snack>
+</view>

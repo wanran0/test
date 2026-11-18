@@ -1,0 +1,25 @@
+<nav-bar title="反馈与投诉" sub="成员发声 · 管理员处理"></nav-bar>
+<view class="page">
+  <view class="wrap">
+    <view class="card">
+      <view class="card-title"><view class="t">我要反馈</view></view>
+      <view class="modes">
+        <view wx:for="{{types}}" wx:key="k" class="m {{type === item.k ? 'on' : ''}}" data-k="{{item.k}}" bindtap="setType">{{item.t}}</view>
+      </view>
+      <textarea class="textarea" style="margin-top:20rpx" placeholder="{{type === 'complaint' ? '描述投诉对象与事实，例如：连续两次值日未打卡…' : type === 'dispute' ? '描述争议事项，申请管理员介入调解…' : '写下你的建议，例如：希望增加按周对账…'}}" value="{{content}}" bindinput="onContent" maxlength="200" />
+      <button class="btn block" style="margin-top:20rpx" bindtap="submit">提交反馈</button>
+      <view class="sub" style="margin-top:14rpx">投诉与纠纷由管理员在后台处理；不当言论会被内容管理拦截</view>
+    </view>
+
+    <view class="sec"><view class="t">我的反馈</view><view class="line"></view></view>
+    <view wx:if="{{!mine.length}}" class="empty"><view class="ico"></view><view class="txt">还没有反馈记录</view></view>
+    <view wx:for="{{mine}}" wx:key="id" class="card">
+      <view class="between">
+        <view class="row"><text class="badge {{item.typeCN === '投诉' ? 'warn' : item.typeCN === '纠纷调解' ? 'info' : 'head'}}">{{item.typeCN}}</text><text class="sub" style="margin-left:14rpx">{{item.ago}}</text></view>
+        <text class="badge {{item.status === 'pending' ? 'mute' : item.status === 'rejected' ? 'warn' : 'ok'}}">{{item.statusCN}}</text>
+      </view>
+      <view style="margin-top:16rpx;font-size:27rpx">{{item.content}}</view>
+      <view wx:if="{{item.reply}}" class="reply">处理回复：{{item.reply}}</view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,11 @@
+.snack {
+  position: fixed; left: 32rpx; right: 32rpx; bottom: calc(170rpx + env(safe-area-inset-bottom));
+  z-index: 95; display: flex; align-items: center;
+  background: #20302B; color: #F6F1E6; border-radius: 22rpx;
+  padding: 22rpx 26rpx; box-shadow: 0 16rpx 36rpx rgba(24, 34, 30, .35);
+  animation: pop .25s cubic-bezier(.22,.9,.36,1) both;
+}
+@keyframes pop { from { transform: translateY(30rpx); opacity: 0; } to { transform: none; opacity: 1; } }
+.snack .msg { flex: 1; min-width: 0; font-size: 26rpx; }
+.snack .act { flex: none; margin-left: 20rpx; color: #E8A33D; font-weight: 800; font-size: 26rpx; padding: 6rpx 10rpx; }
+.snack .x { flex: none; margin-left: 12rpx; opacity: .6; font-size: 32rpx; padding: 0 6rpx; }

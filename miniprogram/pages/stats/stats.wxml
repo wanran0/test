@@ -1,0 +1,69 @@
+<nav-bar title="统计对比" sub="{{dorm ? dorm.name : ''}}">
+  <picker slot="right" mode="date" fields="month" value="{{month}}-01" bindchange="onMonth">
+    <view class="mpick">{{monthCN}} ▾</view>
+  </picker>
+</nav-bar>
+<view class="page">
+  <view class="wrap">
+    <view class="hero">
+      <view class="h-lab">{{monthCN}} 公共支出</view>
+      <view class="h-num num">¥{{total}}</view>
+      <view class="h-row">
+        <view class="h-cell"><view class="v num">{{count}}</view><view class="k">笔数</view></view>
+        <view class="h-cell"><view class="v num">¥{{avg}}</view><view class="k">人均</view></view>
+        <view class="h-cell"><view class="v num">{{cats.length}}</view><view class="k">类别</view></view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title"><view class="t">类别构成</view><view class="more">占比</view></view>
+      <view wx:if="{{!cats.length}}" class="sub">本月暂无支出</view>
+      <view wx:for="{{cats}}" wx:key="name" class="crow">
+        <view class="between"><view class="row"><view class="dot" style="background:{{item.hue}}"></view><text class="bold">{{item.name}}</text><text class="sub" style="margin-left:12rpx">{{item.count}} 笔</text></view><text class="num bold">¥{{item.str}} · {{item.share}}%</text></view>
+        <view class="bar-track" style="margin-top:10rpx"><view class="bar-fill" style="width:{{item.pct}}%;background:{{item.hue}}"></view></view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title"><view class="t">成员分摊</view><view class="more">谁承担得多</view></view>
+      <view wx:for="{{members}}" wx:key="name" class="crow">
+        <view class="between"><view class="row"><view class="dot" style="background:{{item.hue}}"></view><text class="bold">{{item.name}}</text></view><text class="num bold">¥{{item.str}}</text></view>
+        <view class="bar-track" style="margin-top:10rpx"><view class="bar-fill" style="width:{{item.pct}}%;background:{{item.hue}}"></view></view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title"><view class="t">每日支出</view><view class="more">柱高 = 金额</view></view>
+      <view wx:if="{{!days.length}}" class="sub">本月暂无支出</view>
+      <view wx:else class="trend">
+        <view wx:for="{{days}}" wx:key="d" class="tcol">
+          <view class="tbar" style="height:{{item.h}}%"></view>
+          <view class="td num">{{item.d}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title"><view class="t">跨寝室匿名对比</view><view class="badge {{consent ? 'ok' : 'mute'}}">{{consent ? '已授权' : '未授权'}}</view></view>
+      <view class="between" style="margin-bottom:16rpx">
+        <view class="sub grow" style="margin-right:20rpx">授权后本寝室数据以别名进入对比池；池内不足 3 间时自动隐藏（k-匿名）</view>
+        <view class="switch {{consent ? 'on' : ''}}" bindtap="onConsent"><view class="knob"></view></view>
+      </view>
+      <view wx:if="{{cmpErr}}" class="cmperr">{{cmpErr}}</view>
+      <block wx:else>
+        <view wx:for="{{cmp.rows}}" wx:key="alias" class="lrow {{item.mine ? 'mine' : ''}}">
+          <view class="rank num">{{item.rank}}</view>
+          <view class="grow">
+            <view class="row"><text class="bold">{{item.alias}}</text><text wx:if="{{item.mine}}" class="badge head" style="margin-left:12rpx">本寝室</text></view>
+            <view class="sub">{{item.members}} 人 · 月合计 ¥{{item.total}}</view>
+          </view>
+          <view class="num bold">¥{{item.per}}<text class="sub">/人</text></view>
+        </view>
+        <view class="sub" style="margin-top:12rpx">对比池 {{cmp.pool}} 间寝室 · 仅显示别名与聚合值，不含成员姓名与真实寝室号</view>
+      </block>
+    </view>
+
+    <button class="btn block" bindtap="goReport">生成 {{monthCN}} AI 月报</button>
+    <view style="height:40rpx"></view>
+  </view>
+</view>

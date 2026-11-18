@@ -1,0 +1,45 @@
+<nav-bar title="账单" sub="{{dorm ? dorm.name : ''}}" back="{{false}}">
+  <view slot="right" class="sortbtn" bindtap="toggleSort">{{sort === 'time' ? '按时间' : '按金额'}}</view>
+</nav-bar>
+<view class="page tabbed">
+  <view class="wrap">
+    <view wx:if="{{!dorm}}" class="empty"><view class="ico"></view><view class="txt">加入寝室后才能查看账单</view></view>
+    <block wx:else>
+      <view class="toolbar card">
+        <view class="periods">
+          <view class="p {{period === 'day' ? 'on' : ''}}" data-p="day" bindtap="setPeriod">日</view>
+          <view class="p {{period === 'week' ? 'on' : ''}}" data-p="week" bindtap="setPeriod">周</view>
+          <view class="p {{period === 'month' ? 'on' : ''}}" data-p="month" bindtap="setPeriod">月</view>
+          <picker mode="date" value="{{anchor}}" bindchange="onAnchor">
+            <view class="anchor">{{anchorCN}} ▾</view>
+          </picker>
+        </view>
+        <view class="search">
+          <view class="sico"></view>
+          <input class="sinput" placeholder="搜索标题 / 备注 / 垫付人 / 类别" value="{{kw}}" bindinput="onKw" confirm-type="search" />
+          <view wx:if="{{kw}}" class="clr" bindtap="clearKw">×</view>
+        </view>
+        <scroll-view scroll-x class="cats scrl" enhanced show-scrollbar="{{false}}">
+          <view class="chip {{catId === '' ? 'on' : ''}}" data-id="" bindtap="setCat">全部</view>
+          <view wx:for="{{cats}}" wx:key="id" class="chip {{catId === item.id ? 'on' : ''}}" data-id="{{item.id}}" bindtap="setCat">{{item.name}}</view>
+        </scroll-view>
+        <view class="sumline">共 <text class="num bold">{{n}}</text> 笔 · 合计 <text class="num bold verm">¥{{sum}}</text></view>
+      </view>
+
+      <view wx:if="{{!list.length}}" class="empty"><view class="ico"></view><view class="txt">该周期内没有匹配的账单</view></view>
+      <view wx:for="{{list}}" wx:key="id" class="card press brow" data-id="{{item.id}}" bindtap="openBill">
+        <view class="between">
+          <view class="row grow">
+            <view class="avatar" style="background:{{item.hue}};width:72rpx;height:72rpx;border-radius:22rpx;font-size:26rpx">{{item.cat[0]}}</view>
+            <view class="grow">
+              <view class="row"><text class="bold ellipsis">{{item.title}}</text><text class="badge mute" style="margin-left:12rpx">{{item.modeCN}}</text><text wx:if="{{item.settled}}" class="badge ok" style="margin-left:8rpx">已结</text></view>
+              <view class="sub">{{item.date}} {{item.dow}} · {{item.payer}} 垫付 · 我摊 ¥{{item.mine}}</view>
+            </view>
+          </view>
+          <view class="num bold amt">¥{{item.amount}}</view>
+        </view>
+      </view>
+    </block>
+  </view>
+  <view wx:if="{{dorm}}" class="fab" bindtap="goAdd"><view class="plus"></view><view class="cap">记一笔</view></view>
+</view>

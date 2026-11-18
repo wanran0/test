@@ -1,0 +1,15 @@
+.sortbtn { font-size: 22rpx; font-weight: 700; padding: 8rpx 20rpx; border-radius: 999rpx; background: rgba(253,251,244,.16); border: 1rpx solid rgba(253,251,244,.35); }
+.toolbar { padding: 22rpx 24rpx 10rpx; }
+.periods { display: flex; align-items: center; margin-bottom: 18rpx; }
+.p { padding: 10rpx 34rpx; border-radius: 999rpx; background: #F1EBDC; color: var(--mut); font-weight: 700; font-size: 26rpx; margin-right: 12rpx; transition: all .15s ease; }
+.p.on { background: var(--pine); color: #FDFBF4; }
+.anchor { margin-left: auto; font-size: 24rpx; color: var(--pine2); font-weight: 700; }
+.search { display: flex; align-items: center; background: #FBF8EF; border: 2rpx solid var(--line); border-radius: 999rpx; padding: 12rpx 22rpx; margin-bottom: 18rpx; }
+.sico { width: 32rpx; height: 32rpx; margin-right: 12rpx; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='10.5' cy='10.5' r='6.5' fill='none' stroke='%237C8781' stroke-width='2.2'/%3E%3Cpath d='M15.5 15.5L21 21' stroke='%237C8781' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E") center/contain no-repeat; }
+.sinput { flex: 1; font-size: 26rpx; }
+.clr { color: var(--mut); font-size: 34rpx; padding: 0 8rpx; }
+.cats { white-space: nowrap; }
+.cats .chip { display: inline-flex; }
+.sumline { font-size: 24rpx; color: var(--mut); padding: 6rpx 4rpx 12rpx; }
+.brow { padding: 24rpx 26rpx; }
+.amt { font-size: 36rpx; margin-left: 16rpx; }

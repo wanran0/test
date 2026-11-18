@@ -1,0 +1,8 @@
+.mpick { font-size: 22rpx; font-weight: 700; padding: 8rpx 20rpx; border-radius: 999rpx; background: rgba(253,251,244,.16); border: 1rpx solid rgba(253,251,244,.35); }
+.paper { background: linear-gradient(180deg, #FFFCF5, #FBF6E9); position: relative; }
+.paper::before { content: ""; position: absolute; left: 46rpx; top: 0; bottom: 0; width: 2rpx; background: rgba(217,72,43,.18); }
+.spark { width: 76rpx; height: 76rpx; border-radius: 24rpx; margin-right: 20rpx; background: var(--plum-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 3l1.8 4.6L18 9l-4.2 1.4L12 15l-1.8-4.6L6 9l4.2-1.4z' fill='%237A4E8C'/%3E%3Cpath d='M18 14l.9 2.3L21 17l-2.1.7L18 20l-.9-2.3L15 17l2.1-.7z' fill='%237A4E8C'/%3E%3C/svg%3E") center/44rpx no-repeat; }
+.body { white-space: pre-line; font-size: 27rpx; line-height: 1.9; padding-left: 30rpx; }
+.gen { display: flex; align-items: center; padding: 40rpx 0 30rpx 30rpx; }
+.spin { width: 40rpx; height: 40rpx; border-radius: 50%; border: 6rpx solid var(--plum-soft); border-top-color: var(--plum); margin-right: 18rpx; animation: rot .8s linear infinite; }
+@keyframes rot { to { transform: rotate(360deg); } }

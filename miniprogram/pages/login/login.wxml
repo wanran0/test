@@ -1,0 +1,39 @@
+<view class="login">
+  <view class="deco d1"></view>
+  <view class="deco d2"></view>
+  <view class="deco d3"></view>
+  <view class="brand">
+    <view class="mark"></view>
+    <view class="name">宿舍公共费用管理</view>
+    <view class="slogan">一本账，算清一间寝室的烟火气</view>
+    <view class="tags">
+      <text class="tag">费用分摊</text><text class="tag">值日排班</text><text class="tag">净额结算</text>
+    </view>
+  </view>
+  <view class="feat">
+    <view class="f"><view class="fi f1"></view><view class="ft">整数分分摊</view><view class="fs">最大余额法，分毫不差</view></view>
+    <view class="f"><view class="fi f2"></view><view class="ft">三类角色</view><view class="fs">成员 / 寝室长 / 管理员</view></view>
+    <view class="f"><view class="fi f3"></view><view class="ft">隐私对比</view><view class="fs">授权后 k-匿名统计</view></view>
+  </view>
+  <view class="cta">
+    <button class="btn wx {{loading ? 'busy' : ''}}" bindtap="onLogin" disabled="{{loading}}">
+      <view class="wxico"></view>{{loading ? '正在登录…' : '微信一键登录'}}
+    </button>
+    <view class="agree">登录即代表同意《用户协议》与《隐私政策》· G18 课程项目</view>
+  </view>
+
+  <view wx:if="{{sheet}}" class="mask" bindtap="closeSheet"></view>
+  <view wx:if="{{sheet}}" class="sheet">
+    <view class="grab"></view>
+    <view class="h2">选择演示身份</view>
+    <view class="sub" style="margin:8rpx 0 26rpx">评审演示用：以不同角色进入，界面与权限随之变化</view>
+    <view wx:for="{{identities}}" wx:key="id" class="idrow" data-id="{{item.id}}" bindtap="onPick" hover-class="hov">
+      <view class="avatar" style="background:{{item.hue}}">{{item.name[0]}}</view>
+      <view class="grow">
+        <view class="row"><text class="bold">{{item.name}}</text><text class="badge {{item.role}}" style="margin-left:14rpx">{{item.roleCN}}</text></view>
+        <view class="sub">{{item.dorm}}</view>
+      </view>
+      <view class="go">进入 ›</view>
+    </view>
+  </view>
+</view>

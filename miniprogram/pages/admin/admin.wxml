@@ -1,0 +1,117 @@
+<nav-bar title="管理后台" sub="管理员专属界面" back="{{false}}">
+  <view slot="right" class="exit" bindtap="exitAdmin">退出后台</view>
+</nav-bar>
+<view class="page">
+  <view class="wrap">
+    <view wx:if="{{!ok}}" class="card" style="text-align:center;padding:60rpx 30rpx">
+      <view class="empty" style="padding:0 0 26rpx"><view class="ico"></view><view class="txt">当前身份无后台权限</view></view>
+      <view class="sub" style="margin-bottom:26rpx">管理后台仅对「管理员」角色开放</view>
+      <button class="btn block" bindtap="goLogin">切换为管理员身份</button>
+    </view>
+
+    <block wx:else>
+      <view class="tabs">
+        <view class="t {{tab === 'ov' ? 'on' : ''}}" data-t="ov" bindtap="setTab">概览</view>
+        <view class="t {{tab === 'dorms' ? 'on' : ''}}" data-t="dorms" bindtap="setTab">寝室</view>
+        <view class="t {{tab === 'users' ? 'on' : ''}}" data-t="users" bindtap="setTab">用户</view>
+        <view class="t {{tab === 'fb' ? 'on' : ''}}" data-t="fb" bindtap="setTab">反馈</view>
+        <view class="t {{tab === 'flags' ? 'on' : ''}}" data-t="flags" bindtap="setTab">内容</view>
+      </view>
+
+      <block wx:if="{{tab === 'ov'}}">
+        <view class="tiles">
+          <view class="tile t1"><view class="v num">{{stats.dorms}}</view><view class="k">在用寝室</view></view>
+          <view class="tile t2"><view class="v num">{{stats.users}}</view><view class="k">注册用户</view></view>
+          <view class="tile t3"><view class="v num">{{stats.bills}}</view><view class="k">账单笔数</view></view>
+          <view class="tile t4"><view class="v num">{{stats.locked}}</view><view class="k">锁定用户</view></view>
+        </view>
+        <view class="card">
+          <view class="card-title"><view class="t">平台流水</view></view>
+          <view class="h-num num">¥{{stats.totalStr}}</view>
+          <view class="sub">全部寝室累计登记金额</view>
+        </view>
+        <view class="card">
+          <view class="card-title"><view class="t">待办</view></view>
+          <view class="between lrow"><text>待处理反馈 / 投诉 / 纠纷</text><text class="badge {{stats.pendingFb ? 'warn' : 'ok'}}">{{stats.pendingFb}}</text></view>
+          <view class="between lrow"><text>待处理内容举报</text><text class="badge {{stats.pendingFlag ? 'warn' : 'ok'}}">{{stats.pendingFlag}}</text></view>
+        </view>
+      </block>
+
+      <block wx:if="{{tab === 'dorms'}}">
+        <view wx:for="{{dorms}}" wx:key="id" class="card">
+          <view class="between">
+            <view class="grow">
+              <view class="row"><text class="bold">{{item.name}}</text><text class="badge {{item.consent ? 'ok' : 'mute'}}" style="margin-left:12rpx">{{item.consent ? '已授权对比' : '未授权'}}</text></view>
+              <view class="sub">寝室长 {{item.head}} · {{item.members}} 人 · {{item.bills}} 笔账单</view>
+            </view>
+          </view>
+          <view class="row" style="margin-top:18rpx">
+            <button class="btn small line" data-id="{{item.id}}" bindtap="openRename">改名</button>
+            <button class="btn small line" style="margin-left:16rpx;color:var(--verm);border-color:var(--verm)" data-id="{{item.id}}" bindtap="delDorm">删除</button>
+          </view>
+        </view>
+      </block>
+
+      <block wx:if="{{tab === 'users'}}">
+        <view class="card">
+          <view wx:for="{{users}}" wx:key="id" class="lrow">
+            <view class="avatar" style="background:{{item.hue}};width:64rpx;height:64rpx;border-radius:20rpx;font-size:24rpx">{{item.name[0]}}</view>
+            <view class="grow">
+              <view class="row"><text class="bold">{{item.name}}</text><text class="badge {{item.locked ? 'warn' : 'member'}}" style="margin-left:12rpx">{{item.locked ? '已锁定' : item.roleCN}}</text></view>
+              <view class="sub ellipsis">{{item.dorm}}</view>
+            </view>
+            <button class="btn small {{item.locked ? '' : 'line'}}" data-id="{{item.id}}" bindtap="toggleLock">{{item.locked ? '解锁' : '锁定'}}</button>
+          </view>
+        </view>
+        <view class="sub" style="text-align:center;margin:10rpx 0 30rpx">锁定后该用户登录将被拒绝（登录异常处理）</view>
+      </block>
+
+      <block wx:if="{{tab === 'fb'}}">
+        <view wx:if="{{!fb.length}}" class="empty"><view class="ico"></view><view class="txt">暂无反馈</view></view>
+        <view wx:for="{{fb}}" wx:key="id" class="card">
+          <view class="between">
+            <view class="row"><text class="badge {{item.typeCN === '投诉' ? 'warn' : item.typeCN === '纠纷调解' ? 'info' : 'head'}}">{{item.typeCN}}</text><text class="sub" style="margin-left:12rpx">{{item.user}} · {{item.ago}}</text></view>
+            <text class="badge {{item.status === 'pending' ? 'mute' : item.status === 'rejected' ? 'warn' : 'ok'}}">{{item.statusCN}}</text>
+          </view>
+          <view style="margin-top:14rpx;font-size:26rpx">{{item.content}}</view>
+          <view wx:if="{{item.reply}}" class="sub" style="margin-top:10rpx">回复：{{item.reply}}</view>
+          <view wx:if="{{item.status === 'pending'}}" class="row" style="margin-top:18rpx">
+            <button class="btn small" data-id="{{item.id}}" data-act="adopted" bindtap="openReply">采纳</button>
+            <button class="btn small line" style="margin-left:14rpx" data-id="{{item.id}}" data-act="replied" bindtap="openReply">回复</button>
+            <button class="btn small line" style="margin-left:14rpx;color:var(--verm);border-color:var(--verm)" data-id="{{item.id}}" bindtap="rejectFb">驳回</button>
+          </view>
+        </view>
+      </block>
+
+      <block wx:if="{{tab === 'flags'}}">
+        <view wx:if="{{!flags.length}}" class="empty"><view class="ico"></view><view class="txt">暂无内容举报</view></view>
+        <view wx:for="{{flags}}" wx:key="id" class="card">
+          <view class="between">
+            <text class="sub">{{item.user}} · {{item.reason}}</text>
+            <text class="badge {{item.status === 'pending' ? 'mute' : item.status === 'removed' ? 'warn' : 'ok'}}">{{item.statusCN}}</text>
+          </view>
+          <view class="flagtext">{{item.text}}</view>
+          <view wx:if="{{item.status === 'pending'}}" class="row" style="margin-top:16rpx">
+            <button class="btn small verm" data-id="{{item.id}}" data-act="removed" bindtap="resolveFlag">移除内容</button>
+            <button class="btn small line" style="margin-left:14rpx" data-id="{{item.id}}" data-act="kept" bindtap="resolveFlag">保留</button>
+          </view>
+        </view>
+      </block>
+    </block>
+  </view>
+
+  <view wx:if="{{sheet}}" class="mask" bindtap="closeSheet"></view>
+  <view wx:if="{{sheet === 'rename'}}" class="sheet">
+    <view class="grab"></view>
+    <view class="h2">寝室改名</view>
+    <input class="input" style="margin-top:20rpx" value="{{editName}}" bindinput="onEditName" maxlength="20" />
+    <button class="btn block" style="margin-top:22rpx" bindtap="saveRename">保存</button>
+  </view>
+  <view wx:if="{{sheet === 'reply'}}" class="sheet">
+    <view class="grab"></view>
+    <view class="h2">{{replyAction === 'adopted' ? '采纳并回复' : '回复反馈'}}</view>
+    <textarea class="textarea" style="margin-top:20rpx" placeholder="填写处理意见，将展示给反馈人" value="{{replyText}}" bindinput="onReply" maxlength="120" />
+    <button class="btn block" style="margin-top:22rpx" bindtap="saveReply">提交处理</button>
+  </view>
+  <snack id="snack"></snack>
+</view>

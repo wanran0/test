@@ -1,0 +1,93 @@
+<nav-bar title="记一笔" sub="{{dorm ? dorm.name : ''}}"></nav-bar>
+<view class="page">
+  <view class="wrap">
+    <view class="card">
+      <view class="field">
+        <view class="lab">金额（元）<text class="hint">整数分入账，分毫不差</text></view>
+        <view class="amt-box">
+          <text class="cur">¥</text>
+          <input class="amt num" type="digit" placeholder="0.00" value="{{amountStr}}" bindinput="onAmount" />
+        </view>
+      </view>
+      <view class="field">
+        <view class="lab">事由</view>
+        <input class="input" placeholder="例如：桶装水 ×2 / 11月电费" value="{{title}}" bindinput="onTitle" maxlength="30" />
+      </view>
+      <view class="field">
+        <view class="lab">类别<text class="hint" wx:if="{{isHead}}">寝室长可新增</text></view>
+        <view>
+          <view wx:for="{{cats}}" wx:key="id" class="chip {{categoryId === item.id ? 'on' : ''}}" data-id="{{item.id}}" bindtap="onCat">{{item.name}}</view>
+        </view>
+        <view wx:if="{{isHead}}" class="row" style="margin-top:6rpx">
+          <input class="input grow" placeholder="新类别名称" value="{{newCat}}" bindinput="onNewCat" maxlength="8" />
+          <button class="btn small line" style="margin-left:16rpx" bindtap="addCat">添加</button>
+        </view>
+      </view>
+      <view class="row">
+        <view class="field grow" style="margin-right:20rpx">
+          <view class="lab">垫付人</view>
+          <picker range="{{members}}" range-key="name" bindchange="onPayer">
+            <view class="input picker"><text>{{payerName}}</text><text class="arrow">▾</text></view>
+          </picker>
+        </view>
+        <view class="field grow">
+          <view class="lab">发生日期</view>
+          <picker mode="date" value="{{date}}" bindchange="onDate">
+            <view class="input picker"><text>{{date}}</text><text class="arrow">▾</text></view>
+          </picker>
+        </view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title"><view class="t">谁参与分摊</view><view class="more">点选成员</view></view>
+      <view>
+        <view wx:for="{{members}}" wx:key="id" class="chip {{parts[item.id] ? 'on' : ''}}" data-id="{{item.id}}" bindtap="togglePart">{{item.name}}</view>
+      </view>
+      <view class="lab" style="margin:18rpx 0 12rpx;font-weight:700">分摊方式</view>
+      <view class="modes">
+        <view class="m {{mode === 'equal' ? 'on' : ''}}" data-m="equal" bindtap="setMode">均摊</view>
+        <view class="m {{mode === 'ratio' ? 'on' : ''}}" data-m="ratio" bindtap="setMode">按比例</view>
+        <view class="m {{mode === 'custom' ? 'on' : ''}}" data-m="custom" bindtap="setMode">自定义金额</view>
+      </view>
+      <view wx:if="{{mode === 'ratio'}}" class="sub" style="margin:10rpx 0">填写每人的权重（如 2 : 1 : 1），按权重分配</view>
+      <view wx:if="{{mode === 'custom'}}" class="sub" style="margin:10rpx 0">直接填写每人承担金额，合计须等于总额</view>
+      <view wx:for="{{members}}" wx:key="id" wx:if="{{parts[item.id] && mode !== 'equal'}}" class="rrow">
+        <view class="avatar" style="background:{{item.hue}};width:60rpx;height:60rpx;border-radius:18rpx;font-size:24rpx">{{item.name[0]}}</view>
+        <text class="grow bold">{{item.name}}</text>
+        <input wx:if="{{mode === 'ratio'}}" class="rin num" type="digit" value="{{ratios[item.id]}}" data-id="{{item.id}}" bindinput="onRatio" placeholder="权重" />
+        <input wx:else class="rin num" type="digit" value="{{customs[item.id]}}" data-id="{{item.id}}" bindinput="onCustom" placeholder="元" />
+      </view>
+    </view>
+
+    <view class="card preview">
+      <view class="card-title">
+        <view class="t">实时分摊预览</view>
+        <view class="badge {{diff === 0 && total > 0 ? 'ok' : 'warn'}}">{{diff === 0 && total > 0 ? '守恒校验通过' : '差额 ¥' + diffStr}}</view>
+      </view>
+      <view wx:if="{{!preview.length}}" class="sub">输入金额并选择参与人后，这里实时显示每人应承担金额</view>
+      <view wx:for="{{preview}}" wx:key="id" class="prow">
+        <view class="avatar" style="background:{{item.hue}};width:60rpx;height:60rpx;border-radius:18rpx;font-size:24rpx">{{item.name[0]}}</view>
+        <view class="grow">
+          <view class="between"><text class="bold">{{item.name}}</text><text class="num bold">¥{{item.str}}</text></view>
+          <view class="bar-track" style="margin-top:8rpx"><view class="bar-fill" style="width:{{item.pct}}%;background:{{item.hue}}"></view></view>
+        </view>
+        <text class="pct num">{{item.pct}}%</text>
+      </view>
+      <view wx:if="{{preview.length}}" class="between sumrow">
+        <text class="sub">分摊合计 / 账单总额</text>
+        <text class="num bold">¥{{previewSum}} / ¥{{totalStr}}</text>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="field" style="margin-bottom:0">
+        <view class="lab">备注（可选）</view>
+        <textarea class="textarea" placeholder="补充说明，例如：敏超不吃零食，未参与" value="{{note}}" bindinput="onNote" maxlength="120" />
+      </view>
+    </view>
+
+    <button class="btn verm block" disabled="{{!ok}}" bindtap="submit">确认入账 · {{modeCN}}</button>
+    <view class="sub" style="text-align:center;margin:18rpx 0 40rpx">提交后写入本地账本，可在账单页查看与撤销</view>
+  </view>
+</view>

@@ -1,0 +1,54 @@
+<nav-bar title="我的" sub="{{version}}" back="{{false}}"></nav-bar>
+<view class="page tabbed">
+  <view class="wrap">
+    <view class="hero">
+      <view class="row">
+        <view class="avatar big" style="background:{{me.hue}}">{{me.name[0]}}</view>
+        <view class="grow">
+          <view class="row"><text class="h-name">{{me.name}}</text><text class="badge {{me.role}}" style="margin-left:14rpx;background:rgba(253,251,244,.18);color:#FDFBF4">{{roleCN}}</text></view>
+          <view class="h-sub">{{dorm ? dorm.name : (me.role === 'admin' ? '平台管理账号' : '未加入寝室')}}</view>
+        </view>
+      </view>
+      <view class="h-row">
+        <view class="h-cell"><view class="v num">{{myBillN}}</view><view class="k">参与账单</view></view>
+        <view class="h-cell"><view class="v num">{{myDutyN}}</view><view class="k">近30天打卡</view></view>
+        <view class="h-cell"><view class="v num">{{dorm ? dorm.memberIds.length : 0}}</view><view class="k">寝室成员</view></view>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="card-title"><view class="t">演示身份切换</view><view class="more">评审用</view></view>
+      <view wx:for="{{identities}}" wx:key="id" class="idrow {{item.cur ? 'cur' : ''}}" data-id="{{item.id}}" bindtap="switchId" hover-class="hov">
+        <view class="avatar" style="background:{{item.hue}};width:64rpx;height:64rpx;border-radius:20rpx;font-size:24rpx">{{item.name[0]}}</view>
+        <view class="grow">
+          <view class="bold">{{item.name}}</view>
+          <view class="sub">{{item.roleCN}}</view>
+        </view>
+        <text wx:if="{{item.cur}}" class="badge ok">当前</text>
+        <text wx:else class="go">切换 ›</text>
+      </view>
+    </view>
+
+    <view class="card" style="padding:8rpx 28rpx">
+      <view wx:for="{{entries}}" wx:key="k" class="lrow press" data-url="{{item.url}}" bindtap="go">
+        <view class="grow">
+          <view class="bold">{{item.t}}</view>
+          <view class="sub">{{item.s}}</view>
+        </view>
+        <view class="go">›</view>
+      </view>
+    </view>
+
+    <view class="card" style="padding:8rpx 28rpx">
+      <view class="lrow press" bindtap="resetData">
+        <view class="grow"><view class="bold">重置演示数据</view><view class="sub">恢复初始种子账本</view></view>
+        <view class="go">›</view>
+      </view>
+      <view class="lrow press" bindtap="logout">
+        <view class="grow"><view class="bold verm">退出登录</view><view class="sub">返回身份选择</view></view>
+        <view class="go">›</view>
+      </view>
+    </view>
+    <view class="sub" style="text-align:center;margin:10rpx 0 30rpx">G18 · 宿舍公共费用管理小程序 · 前端演示版（本地账本）</view>
+  </view>
+</view>

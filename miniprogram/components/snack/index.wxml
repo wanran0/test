@@ -1,0 +1,5 @@
+<view wx:if="{{visible}}" class="snack">
+  <view class="msg ellipsis">{{msg}}</view>
+  <view wx:if="{{label}}" class="act" bindtap="onAction">{{label}}</view>
+  <view class="x" bindtap="onClose">×</view>
+</view>
