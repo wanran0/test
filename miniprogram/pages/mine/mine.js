@@ -16,7 +16,7 @@ Page({
     var ids = ['u1', 'u2', 'u9'];
     var identities = ids.map(function (id) {
       var u = S.userById(id);
-      return { id: id, name: u.name, hue: u.hue, roleCN: S.roleCN(u.role), cur: u.id === me.id };
+      return { id: id, name: u.name, hue: u.hue, roleCN: S.roleCN(u.role), cur: u.id === me.id, locked: !!u.locked };
     });
     var myBillN = 0, myDutyN = 0;
     if (dorm) {
@@ -42,8 +42,9 @@ Page({
   switchId: function (e) {
     var id = e.currentTarget.dataset.id;
     if (id === this.data.me.id) return;
-    S.login(id);
-    var u = S.userById(id);
+    var r = S.login(id);
+    if (!r.ok) { wx.showToast({ title: r.msg, icon: 'none' }); return; }
+    var u = r.user;
     wx.showToast({ title: '已切换为 ' + u.name, icon: 'none' });
     setTimeout(function () {
       if (u.role === 'admin') wx.reLaunch({ url: '/pages/admin/admin' });

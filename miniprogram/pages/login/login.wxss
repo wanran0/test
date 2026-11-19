@@ -11,7 +11,7 @@
 .brand { position: relative; margin-top: 40rpx; }
 .mark {
   width: 148rpx; height: 148rpx; border-radius: 42rpx; margin-bottom: 36rpx;
-  background: #FDFBF4 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='14' y='10' width='36' height='44' rx='7' fill='%230F3D33'/%3E%3Cpath d='M22 22h20M22 30h20M22 38h12' stroke='%23E8A33D' stroke-width='3.4' stroke-linecap='round'/%3E%3Ccircle cx='44' cy='44' r='9' fill='%23D9482B'/%3E%3Cpath d='M41 44l2.4 2.4L48 42' stroke='%23FFF7EC' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/72% no-repeat;
+  background: #F6F1E6;
   box-shadow: 0 18rpx 40rpx rgba(0, 0, 0, .28);
 }
 .name { font-size: 56rpx; font-weight: 900; letter-spacing: 3rpx; }
@@ -34,3 +34,6 @@
 .idrow:last-child { border-bottom: none; }
 .idrow.hov { background: #F4EFE2; }
 .idrow .go { color: var(--pine2); font-weight: 700; font-size: 26rpx; }
+.idrow.locked { opacity: .5; }
+.idrow.locked .go { color: #8A9490; }
+.badge.lock { background: #F6E3DC; color: #D9482B; }

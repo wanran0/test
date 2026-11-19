@@ -150,7 +150,14 @@ function isAdmin() { var m = me(); return !!(m && m.role === 'admin'); }
 function roleCN(r) { return r === 'head' ? '寝室长' : r === 'admin' ? '管理员' : '普通成员'; }
 
 // ---------- 会话 ----------
-function login(userId) { init(); db.session = { userId: userId }; save(); }
+function login(userId) {
+  init();
+  var u = userById(userId);
+  if (!u) return { ok: false, msg: '账号不存在' };
+  if (u.locked) return { ok: false, msg: '该账号已被锁定，请联系管理员解锁' };
+  db.session = { userId: userId }; save();
+  return { ok: true, user: u };
+}
 function logout() { init(); db.session = null; save(); }
 
 // ---------- 分摊引擎（整数分 · 最大余额法） ----------
@@ -180,6 +187,7 @@ function computeSplits(total, parts, mode, ratios) {
 }
 function addBill(draft) {
   init();
+  if (draft.splitMode !== 'equal' && !isHead()) return { ok: false, msg: '仅寝室长可设定比例/自定义分摊' };
   var splits = computeSplits(draft.amountCents, draft.participantIds, draft.splitMode, draft.ratios);
   var sum = splits.reduce(function (s, x) { return s + x.cents; }, 0);
   if (sum !== draft.amountCents) return { ok: false, msg: '分摊合计与总额不一致（守恒校验失败）' };

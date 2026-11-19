@@ -71,7 +71,11 @@ Page({
     parts[id] = !parts[id];
     this.setData({ parts: parts }); this.calc();
   },
-  setMode: function (e) { this.setData({ mode: e.currentTarget.dataset.m }); this.calc(); },
+  setMode: function (e) {
+    var m = e.currentTarget.dataset.m;
+    if (m !== 'equal' && !this.data.isHead) { wx.showToast({ title: '仅寝室长可设定比例/自定义分摊', icon: 'none' }); return; }
+    this.setData({ mode: m }); this.calc();
+  },
   onRatio: function (e) {
     var r = this.data.ratios; r[e.currentTarget.dataset.id] = e.detail.value;
     this.setData({ ratios: r }); this.calc();

@@ -47,9 +47,10 @@
       <view class="lab" style="margin:18rpx 0 12rpx;font-weight:700">分摊方式</view>
       <view class="modes">
         <view class="m {{mode === 'equal' ? 'on' : ''}}" data-m="equal" bindtap="setMode">均摊</view>
-        <view class="m {{mode === 'ratio' ? 'on' : ''}}" data-m="ratio" bindtap="setMode">按比例</view>
-        <view class="m {{mode === 'custom' ? 'on' : ''}}" data-m="custom" bindtap="setMode">自定义金额</view>
+        <view wx:if="{{isHead}}" class="m {{mode === 'ratio' ? 'on' : ''}}" data-m="ratio" bindtap="setMode">按比例</view>
+        <view wx:if="{{isHead}}" class="m {{mode === 'custom' ? 'on' : ''}}" data-m="custom" bindtap="setMode">自定义金额</view>
       </view>
+      <view wx:if="{{!isHead}}" class="sub" style="margin:10rpx 0">比例 / 自定义分摊仅寝室长可设定</view>
       <view wx:if="{{mode === 'ratio'}}" class="sub" style="margin:10rpx 0">填写每人的权重（如 2 : 1 : 1），按权重分配</view>
       <view wx:if="{{mode === 'custom'}}" class="sub" style="margin:10rpx 0">直接填写每人承担金额，合计须等于总额</view>
       <view wx:for="{{members}}" wx:key="id" wx:if="{{parts[item.id] && mode !== 'equal'}}" class="rrow">

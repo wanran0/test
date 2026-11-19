@@ -10,5 +10,8 @@
 .idrow:last-child { border-bottom: none; }
 .idrow.cur { background: var(--jade-soft); }
 .idrow.hov { background: #F4EFE2; }
+.idrow.locked { opacity: .5; }
+.badge.lock { background: #F6E3DC; color: #D9482B; }
+.brandlogo { display: block; width: 96rpx; height: 96rpx; margin: 26rpx auto 0; border-radius: 24rpx; }
 .go { color: var(--pine2); font-weight: 700; font-size: 30rpx; }
 .lrow.press:active { opacity: .7; }
